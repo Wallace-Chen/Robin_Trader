@@ -21,5 +21,6 @@ setup(name='robin_stocks',
       requires=['requests'],
       install_requires=[
           'requests',
+		  'numpy'
       ],
       zip_safe=False)
