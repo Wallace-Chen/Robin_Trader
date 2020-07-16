@@ -3,30 +3,10 @@ import getpass
 import os
 import pickle
 import random
-import platform
-import time
-import datetime as dt
 
 import robin_stocks.helper as helper
 import robin_stocks.urls as urls
-import robin_stocks.getCode as getCode
 
-def creation_date(path_to_file):
-    """
-    Try to get the date that a file was created, falling back to when it was
-    last modified if that isn't possible.
-    See http://stackoverflow.com/a/39501288/1709587 for explanation.
-    """
-    if platform.system() == 'Windows':
-        return dt.datetime.fromtimestamp(os.path.getctime(path_to_file))
-    else:
-        stat = os.stat(path_to_file)
-        try:
-            return dt.datetime.fromtimestamp(stat.st_birthtime)
-        except AttributeError:
-            # We're probably on Linux. No easy way to get creation dates here,
-            # so we'll settle for when its content was last modified.
-            return dt.datetime.fromtimestamp(stat.st_mtime)
 
 def generate_device_token():
     """This function will generate a token used when loggin on.
@@ -71,7 +51,7 @@ def respond_to_challenge(challenge_id, sms_code):
     return(helper.request_post(url, payload))
 
 
-def login(username=None, password=None, expiresIn=86400, scope='internal', by_sms=False, store_session=True):
+def login(username=None, password=None, expiresIn=86400, scope='internal', by_sms=True, store_session=True):
     """This function will effectivly log the user into robinhood by getting an
     authentication token and saving it to the session header. By default, it
     will store the authentication token in a pickle file and load that value
@@ -108,9 +88,8 @@ def login(username=None, password=None, expiresIn=86400, scope='internal', by_sm
         challenge_type = "sms"
     else:
         challenge_type = "email"
+
     url = urls.login_url()
-    days = 10 # expires in days
-    expiresIn = expiresIn * days
     payload = {
         'client_id': 'c82SH0WZOsabOXGP2sxqcj34FxkvfnWRZBKlBjFS',
         'expires_in': expiresIn,
@@ -128,10 +107,6 @@ def login(username=None, password=None, expiresIn=86400, scope='internal', by_sm
         if store_session:
             try:
                 with open(pickle_path, 'rb') as f:
-                    time_token = creation_date(pickle_path)
-                    time_passed = time.mktime(dt.datetime.now().timetuple()) - time.mktime(time_token.timetuple())
-                    if((days*86400 - int(time_passed)) < 86400):
-                        raise Exception("The remaining time of pickle file is too short!")
                     pickle_data = pickle.load(f)
                     access_token = pickle_data['access_token']
                     token_type = pickle_data['token_type']
@@ -181,12 +156,9 @@ def login(username=None, password=None, expiresIn=86400, scope='internal', by_sm
             data = res.json()
         elif 'challenge' in data:
             challenge_id = data['challenge']['id']
-            #sms_code = input('Enter Robinhood code for validation: ')
-            print("auto getting verification code from email...")
-            sms_code = getCode.getcode()
+            sms_code = input('Enter Robinhood code for validation: ')
             res = respond_to_challenge(challenge_id, sms_code)
             while 'challenge' in res and res['challenge']['remaining_attempts'] > 0:
-                print("Auto checking code failed, pls check manually in your email inbox.")
                 sms_code = input('That code was not correct. {0} tries remaining. Please type in another code: '.format(
                     res['challenge']['remaining_attempts']))
                 res = respond_to_challenge(challenge_id, sms_code)
@@ -221,4 +193,3 @@ def logout():
     """
     helper.set_login_state(False)
     helper.update_session('Authorization', None)
-	

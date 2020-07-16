@@ -24,15 +24,18 @@ password = ''
 login = r.login(username,password)
 
 #!!! fill out the specific option information
-symbol = 'UAL'
-expirationDate = '2020-07-02' # format is YYYY-MM-DD.
-#expirationDate = '2020-10-16' # format is YYYY-MM-DD.
-strike = 35
-optionType = 'put' # available options are 'call' or 'put' or None.
+symbol = 'AAPL'
+expirationDate = '2020-07-17' # format is YYYY-MM-DD.
+strike = 395
+#symbol = 'WORK'
+#expirationDate = '2020-08-21' # format is YYYY-MM-DD.
+#strike = 40
+optionType = 'call' # available options are 'call' or 'put' or None.
 interval = '5minute' # available options are '5minute', '10minute', 'hour', 'day', and 'week'.
 span = 'week' # available options are 'day', 'week', 'year', and '5year'.
 bounds = 'regular' # available options are 'regular', 'trading', and 'extended'.
-days_back = 2
+days_back = 1
+period_sma_20m = 4
 period_sma_30m = 6
 period_sma_1h = 12
 info = None
@@ -73,6 +76,7 @@ for data_point in historicalData:
     dates.append(data_point['begins_at'])
     closingPrices.append(float(data_point['close_price']))
     openPrices.append(float(data_point['open_price']))
+    print("{}: add new data points {}!".format( data_point['begins_at'], float(data_point['close_price'])))
 for stock_point in stocksData:
     if(dt.datetime.strptime(stock_point['begins_at'],'%Y-%m-%dT%H:%M:%SZ') < timecut): continue
     stock_dates.append(stock_point['begins_at'])
@@ -89,15 +93,17 @@ formatter = MyFormatter(stock_x, '%Y-%m-%dT%H:%M:%SZ')
 ax1.xaxis.set_major_formatter(formatter)
 #ax1.plot(stock_x, stock_closingPrices, '-go', label="stock closing price")
 ax1.plot(np.arange(len(stock_x)), stock_closingPrices, '-g', label="stock closing price")
-ax1.plot(np.arange(period_sma_1h-1,len(stock_x)), r.simple_ma(stock_closingPrices, period_sma_1h), '--g', label="stock 1 hour sma price")
-ax1.plot(np.arange(period_sma_30m-1,len(stock_x)), r.simple_ma(stock_closingPrices, period_sma_30m), ':g', label="stock 30 mins sma price")
+ax1.plot(np.arange(period_sma_1h-1,len(stock_x)), r.expo_ma(stock_closingPrices, period_sma_1h), ':g', label="stock 1 hour ema price")
+ax1.plot(np.arange(period_sma_30m-1,len(stock_x)), r.expo_ma(stock_closingPrices, period_sma_30m), '-.g', label="stock 30 mins ema price")
+ax1.plot(np.arange(period_sma_20m-1,len(stock_x)), r.expo_ma(stock_closingPrices, period_sma_20m), '--g', label="stock 20 mins ema price")
 ax1.set_ylabel("Stock price", color='green')
 ax1.tick_params(axis='y', labelcolor="green")
 ax2 = ax1.twinx()
 #ax2.plot(x, closingPrices, '-bo', label="option closing price")
 ax2.plot(np.arange(len(x)), closingPrices, '-b', label="option closing price")
-ax2.plot(np.arange(period_sma_1h-1,len(x)), r.simple_ma(closingPrices, period_sma_1h), '--b', label="option 1 hour sma price")
-ax2.plot(np.arange(period_sma_30m-1,len(x)), r.simple_ma(closingPrices, period_sma_30m), ':b', label="option 30 mins sma price")
+ax2.plot(np.arange(period_sma_1h-1,len(x)), r.expo_ma(closingPrices, period_sma_1h), ':b', label="option 1 hour ema price")
+ax2.plot(np.arange(period_sma_30m-1,len(x)), r.expo_ma(closingPrices, period_sma_30m), '-.b', label="option 30 mins ema price")
+ax2.plot(np.arange(period_sma_20m-1,len(x)), r.expo_ma(closingPrices, period_sma_20m), '--b', label="option 20 mins ema price")
 plt.title("Option & stock price for {} over time".format(symbol_name))
 ax2.set_xlabel("Dates")
 ax2.set_ylabel("Option price", color="blue")

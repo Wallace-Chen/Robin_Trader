@@ -136,3 +136,15 @@ from .stocks import get_quotes,                 \
                     get_pricebook_by_symbol,    \
                     get_stock_quote_by_id,      \
                     get_stock_quote_by_symbol
+from .indicators import    setup_logger,        \
+                           close_logger,		\
+                           simple_ma,           \
+                           expo_ma,				\
+						   sma_update,			\
+						   ema_update,			\
+						   update_status,		\
+						   is_sorted,			\
+						   update_trend,		\
+						   check_signal,		\
+						   strategy_ema
+from .getCode    import    getcode

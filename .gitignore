@@ -18,3 +18,6 @@ __pycache__/
 tests/test_app.py
 
 .cache/v/cache/
+
+*txt
+robin_stocks/log/

@@ -9,17 +9,17 @@ It also saves the data to a txt file. The txt file is saved in the same director
 '''
 
 #!!! Fill out username and password
-username = ''
-password = ''
+username = '54chenyuan@gmail.com'
+password = '54tianCAI!'
 #!!!
 
 login = r.login(username,password)
 
 #!!! fill out the specific option information
-strike = 300
-date = "2020-07-02"
+strike = 355
+date = "2020-06-26"
 stock = "AAPL"
-optionType = "call" #or "put"
+optionType = "put" #or "put"
 #!!!
 
 # File saving variables
@@ -30,7 +30,7 @@ fileName = "options.txt"
 writeType = "w" #or enter "a" to have it continuously append every time script is run
 #
 
-os.chdir(os.path.dirname(__file__))
+#os.chdir(os.path.dirname(__file__))
 path = os.getcwd()
 filename = os.path.join(path,fileName)
 fileStream = open(filename, mode=writeType)

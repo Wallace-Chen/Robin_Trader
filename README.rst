@@ -1,3 +1,7 @@
+This is a personal repository, which is developed further based on the original repo:
+https://github.com/jmfernandes/robin_stocks
+
+
 Robinhood API Library
 ========================
 

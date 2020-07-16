@@ -25,14 +25,14 @@ login = r.login(username,password)
 
 #!!! fill out the specific option information
 symbol = 'UAL'
-expirationDate = '2020-07-02' # format is YYYY-MM-DD.
+expirationDate = '2020-07-10' # format is YYYY-MM-DD.
 #expirationDate = '2020-10-16' # format is YYYY-MM-DD.
 strike = 35
 optionType = 'put' # available options are 'call' or 'put' or None.
 interval = '5minute' # available options are '5minute', '10minute', 'hour', 'day', and 'week'.
 span = 'week' # available options are 'day', 'week', 'year', and '5year'.
 bounds = 'regular' # available options are 'regular', 'trading', and 'extended'.
-days_back = 2
+days_back = 3
 period_sma_30m = 6
 period_sma_1h = 12
 info = None
