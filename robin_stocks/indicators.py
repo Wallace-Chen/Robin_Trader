@@ -4,7 +4,7 @@ import datetime as dt
 import pytz
 import logging
 
-logging.basicConfig(filename='log/log_analyzer_%s.txt'%dt.datetime.now().strftime("%Y-%m-%d"), filemode='a', format='%(asctime)s - %(name)s , %(levelname)s : %(message)s',level=logging.INFO)
+#logging.basicConfig(filename='log/log_analyzer_%s.txt'%dt.datetime.now().strftime("%Y-%m-%d"), filemode='a', format='%(asctime)s - %(name)s , %(levelname)s : %(message)s',level=logging.INFO)
 logfile_analyzer = filename='log/log_analyzer_%s.txt'%dt.datetime.now().strftime("%Y-%m-%d")
 
 def setup_logger(name, log_file, level=logging.INFO):
