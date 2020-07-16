@@ -240,9 +240,9 @@ class orderExecution(threading.Thread):
 
 	def optionCandidate(self, opt, logger):
 		logger.info("Looking for valid option to buy")
-#		if afterHours():
-#			print("Market is closed now.")
-#			return None
+		if afterHours():
+			print("Market is closed now.")
+			return None
 		portfolio = r.load_portfolio_profile()
 		if portfolio["extended_hours_equity"] == None or portfolio["extended_hours_market_value"] == None:
 			balance = float(portfolio["equity"]) - float(portfolio["market_value"])
