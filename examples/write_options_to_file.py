@@ -9,8 +9,8 @@ It also saves the data to a txt file. The txt file is saved in the same director
 '''
 
 #!!! Fill out username and password
-username = '54chenyuan@gmail.com'
-password = '54tianCAI!'
+username = ''
+password = ''
 #!!!
 
 login = r.login(username,password)
