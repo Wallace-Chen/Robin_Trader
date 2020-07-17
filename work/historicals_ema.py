@@ -26,18 +26,18 @@ login = r.login(username,password)
 #!!! fill out the specific option information
 symbol = 'AAPL'
 expirationDate = '2020-07-17' # format is YYYY-MM-DD.
-strike = 395
-#symbol = 'WORK'
-#expirationDate = '2020-08-21' # format is YYYY-MM-DD.
-#strike = 40
+strike = 390
+#symbol = 'AAL'
+#expirationDate = '2020-07-17' # format is YYYY-MM-DD.
+#strike = 12.5
 optionType = 'call' # available options are 'call' or 'put' or None.
 interval = '5minute' # available options are '5minute', '10minute', 'hour', 'day', and 'week'.
 span = 'week' # available options are 'day', 'week', 'year', and '5year'.
 bounds = 'regular' # available options are 'regular', 'trading', and 'extended'.
-days_back = 1
+days_back = 7
 period_sma_20m = 4
-period_sma_30m = 6
-period_sma_1h = 12
+period_sma_30m = 10
+period_sma_1h = 24
 info = None
 symbol_name = r.get_name_by_symbol(symbol)
 #!!!
@@ -66,22 +66,26 @@ stocksData = r.get_stock_historicals(symbol, interval, span, bounds, info)
 dates = []
 closingPrices = []
 openPrices = []
+volumes = []
 
 stock_dates = []
 stock_closingPrices = []
 stock_openPrices = []
+stock_volumes = []
 
 for data_point in historicalData:
     if(dt.datetime.strptime(data_point['begins_at'],'%Y-%m-%dT%H:%M:%SZ') < timecut): continue
     dates.append(data_point['begins_at'])
     closingPrices.append(float(data_point['close_price']))
     openPrices.append(float(data_point['open_price']))
+    volumes.append(float(data_point['volume']))
     print("{}: add new data points {}!".format( data_point['begins_at'], float(data_point['close_price'])))
 for stock_point in stocksData:
     if(dt.datetime.strptime(stock_point['begins_at'],'%Y-%m-%dT%H:%M:%SZ') < timecut): continue
     stock_dates.append(stock_point['begins_at'])
     stock_closingPrices.append(float(stock_point['close_price']))
     stock_openPrices.append(float(stock_point['open_price']))
+    stock_volumes.append(float(stock_point['volume']))
 
 fig, ax1 = plt.subplots()
 # change the dates into a format that matplotlib can recognize.
@@ -108,6 +112,10 @@ plt.title("Option & stock price for {} over time".format(symbol_name))
 ax2.set_xlabel("Dates")
 ax2.set_ylabel("Option price", color="blue")
 ax2.tick_params(axis='y', labelcolor="blue")
+ax3 = ax1.twinx()
+ax3.plot(np.arange(len(stock_x)), stock_volumes, '-k', label="stock volume")
+ax3.set_ylabel("Volume", color="black")
+ax3.legend(loc="best")
 ax1.legend(loc="upper left")
 ax2.legend(loc="upper right")
 ##fig.tight_layout()  # otherwise the right y-label is slightly clipped

@@ -128,9 +128,10 @@ def initializeOption_simulation(stk, opt):
 
 class showPrice(object):	
 	def __init__(self):
-		self.plotting_rate = 1000 # 1000 ms
+		self.plotting_rate = 2000 # 1000 ms
 		self.refreshing_rate = 5 # 1000 ms
 		self.ema = True # show SMA by default, set it to True to show EMA
+		self.legendShow = False
 		
 #		self.logger = logging.getLogger('showPrice') 
 #		self.logger.info("showPrice class has been initialized: EMA: %d, refreshing rate: %d ms"%(self.ema, self.plotting_rate))
@@ -149,7 +150,8 @@ class showPrice(object):
 			xdata = [dt.datetime.strptime(d,'%Y-%m-%dT%H:%M:%SZ') for d in self.stk.time]
 			formatter = MyFormatter(xdata, '%Y-%m-%dT%H:%M:%SZ')
 			self.ax.xaxis.set_major_formatter(formatter)
-			self.ax.plot(np.arange(len(self.stk.time)), self.stk.price, 'b-', label="price" if len(self.stk.time) == 1 else "")
+			self.ax.plot(np.arange(len(self.stk.time)), self.stk.price, 'b-', label="price" if self.legendShow == False else "")
+			self.legendShow = True
 			if len(self.stk.trend)>0:
 				print("tmp_trend: {}, ".format(self.stk.tmp_trend[-1]))
 				print("trend: {}, ".format(self.stk.trend[-1]))

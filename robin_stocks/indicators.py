@@ -153,8 +153,8 @@ def update_trend(stk, pos): # update trend variables at the position @ pos
 #			print(stk.tmp_trend)
 #			print(len(set(stk.tmp_trend[-int(stk.period_ma1/2):]))==1)
 #			print(stk.tmp_trend[-1])
-			if len(set(stk.tmp_trend[-int(stk.period_ma1/2):]))==1 and stk.tmp_trend[-1] == "up": stk.trend[-1] = "up" # if tmp_trend variables has been "up" for a while, then decides now trend is "up"
-			if len(set(stk.tmp_trend[-int(stk.period_ma1/2):]))==1 and stk.tmp_trend[-1] == "down": stk.trend[-1] = "down" # if tmp_trend variables has been "down" for a while, then decides now trend is "down"
+			if len(set(stk.tmp_trend[-int(stk.period_ma1/1):]))==1 and stk.tmp_trend[-1] == "up": stk.trend[-1] = "up" # if tmp_trend variables has been "up" for a while, then decides now trend is "up"
+			if len(set(stk.tmp_trend[-int(stk.period_ma1/1):]))==1 and stk.tmp_trend[-1] == "down": stk.trend[-1] = "down" # if tmp_trend variables has been "down" for a while, then decides now trend is "down"
 #			print(stk.trend[-1])
 			
 	
@@ -168,7 +168,7 @@ def check_signal(stk): # a function to check if a "buy" or "sell" signal should 
 		if  (not stk.ema3_dvt[-1] == None) and stk.ema1_dvt[-1]>0 and stk.ema2_dvt[-1]>0 and stk.ema3_dvt[-1]>0: # second, the derivatives must be pointing up
 			crossed = False
 			converge = False
-			for i in range(2, 3+int(stk.period_ma1/2)): # third, need to check if ema lines are reversed in order within the past short time
+			for i in range(2, 2+int(stk.period_ma1/3)): # third, need to check if ema lines are reversed in order within the past short time
 				if is_sorted(stk.status[-i][-3:], False):
 					crossed = True
 				if is_sorted(stk.status[-i][:2], False):
@@ -187,7 +187,7 @@ def check_signal(stk): # a function to check if a "buy" or "sell" signal should 
 		if (not stk.ema3_dvt[-1] == None) and stk.ema1_dvt[-1]<0 and stk.ema2_dvt[-1]<0 and stk.ema3_dvt[-1]<0: # second, the derivatives must be pointing down
 			crossed = False
 			converge = False
-			for i in range(2, 3+int(stk.period_ma1/2)): # third, need to check if ema lines are reversed in order within the past short time
+			for i in range(2, 2+int(stk.period_ma1/3)): # third, need to check if ema lines are reversed in order within the past short time
 				if is_sorted(stk.status[-i][-3:], True):
 					crossed = True
 				if is_sorted(stk.status[-i][:2], True):
@@ -249,8 +249,8 @@ def check_exit(opt): # check exit signal and set proper sell price
 			logger.info(opt.ema3)
 			
 			opt.signal[-1] = "close"
-		if all([i<j for i,j in zip(opt.price[-int(opt.period_ma1/4):], opt.ema1[-int(opt.period_ma1/4):])]):
-			logger.info("call option: a close signal is triggered: price hit the ema1 line for {} minutes, price, ema1, ema2, ema3".format(int(opt.period_ma1/4)))
+		if all([i<j for i,j in zip(opt.price[-int(opt.period_ma1/3):], opt.ema1[-int(opt.period_ma1/3):])]):
+			logger.info("call option: a close signal is triggered: price hit the ema1 line for {} minutes, price, ema1, ema2, ema3".format(int(opt.period_ma1/3)))
 			logger.info(opt.price)
 			logger.info(opt.ema1)
 			logger.info(opt.ema2)
@@ -266,8 +266,8 @@ def check_exit(opt): # check exit signal and set proper sell price
 			logger.info(opt.ema3)
 
 			opt.signal[-1] = "close"
-		if all([i<j for i,j in zip(opt.price[-int(opt.period_ma1/4):], opt.ema1[-int(opt.period_ma1/4):])]):
-			logger.info("put option: a close signal is triggered: price hit the ema1 line for {} minutes, price, ema1, ema2, ema3".format(int(opt.period_ma1/4)))
+		if all([i<j for i,j in zip(opt.price[-int(opt.period_ma1/3):], opt.ema1[-int(opt.period_ma1/3):])]):
+			logger.info("put option: a close signal is triggered: price hit the ema1 line for {} minutes, price, ema1, ema2, ema3".format(int(opt.period_ma1/3)))
 			logger.info(opt.price)
 			logger.info(opt.ema1)
 			logger.info(opt.ema2)

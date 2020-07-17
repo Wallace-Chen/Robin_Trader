@@ -67,5 +67,5 @@ class tradingStrategy(realTimeShow):
 
 if __name__ == '__main__':
 	mp.set_start_method("forkserver") 
-	myStrategy = tradingStrategy("AAPL",20, 6, 15, 30, True)
+	myStrategy = tradingStrategy("AAPL",45, 9, 30, 60, True)
 	myStrategy.run()

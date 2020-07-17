@@ -243,6 +243,7 @@ class orderExecution(threading.Thread):
 		logger.info("Looking for valid option to buy")
 		if afterHours():
 			print("Market is closed now.")
+			logger.info("Market is closed now.")
 			return None
 		portfolio = r.load_portfolio_profile()
 		if portfolio["extended_hours_equity"] == None or portfolio["extended_hours_market_value"] == None:
@@ -266,17 +267,23 @@ class orderExecution(threading.Thread):
 				return None # cannot find a valid expiration date
 		if self.stk.signal[-1] == "buy": option_type = "call"
 		elif self.stk.signal[-1] == "sell": option_type = "put"
-		else: return None
+		else: 
+			print("cannot find valid signals, it may be changed!")
+			logger.info("cannot find valid signals, it may be changed!")
+			return None
 		rlts = r.find_options_by_expiration(self.stk.symbol, expr_date.strftime("%Y-%m-%d"), option_type)
 		opts = []
-		for opt in rlts:
-			if float(opt["adjusted_mark_price"]) < self.limit_price*0.95/100 and float(opt["adjusted_mark_price"]) > 0.01:
+		for rlt in rlts:
+			if float(rlt["adjusted_mark_price"]) < self.limit_price*0.95/100 and float(rlt["adjusted_mark_price"]) > 0.01:
 				dic = {}
-				dic["adjusted_mark_price"] = float(opt["adjusted_mark_price"])
-				dic["strike_price"] = float(opt["strike_price"])
-				dic["gamma"] = float(opt["gamma"])
+				dic["adjusted_mark_price"] = float(rlt["adjusted_mark_price"])
+				dic["strike_price"] = float(rlt["strike_price"])
+				dic["gamma"] = float(rlt["gamma"])
 				opts.append(dic)
-		if len(opts) == 0: return None
+		if len(opts) == 0: 
+			print("cannot find available options, check your price limit")
+			logger.info("cannot find available options, check your price limit")
+			return None
 		opts.sort(key=lambda x: x["gamma"], reverse=True)
 		opt.type = option_type
 		opt.expr_date = expr_date.strftime("%Y-%m-%d")
