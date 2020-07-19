@@ -25,8 +25,8 @@ login = r.login(username,password)
 
 #!!! fill out the specific option information
 symbol = 'AAPL'
-expirationDate = '2020-07-17' # format is YYYY-MM-DD.
-strike = 390
+expirationDate = '2020-07-24' # format is YYYY-MM-DD.
+strike = 400
 #symbol = 'AAL'
 #expirationDate = '2020-07-17' # format is YYYY-MM-DD.
 #strike = 12.5
@@ -34,7 +34,7 @@ optionType = 'call' # available options are 'call' or 'put' or None.
 interval = '5minute' # available options are '5minute', '10minute', 'hour', 'day', and 'week'.
 span = 'week' # available options are 'day', 'week', 'year', and '5year'.
 bounds = 'regular' # available options are 'regular', 'trading', and 'extended'.
-days_back = 7
+days_back = 1
 period_sma_20m = 4
 period_sma_30m = 10
 period_sma_1h = 24

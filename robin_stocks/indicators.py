@@ -10,7 +10,8 @@ logfile_analyzer = filename='log/log_analyzer_%s.txt'%dt.datetime.now().strftime
 def setup_logger(name, log_file, level=logging.INFO):
 	""" return a logger with log_file """
 	logger = logging.getLogger(name)
-	fh = logging.FileHandler(log_file, mode='a')
+#	fh = logging.FileHandler(log_file, mode='a')
+	fh = logging.FileHandler("log/dump.txt", mode='a')
 	fh.setLevel(level)
 	fh.setFormatter(logging.Formatter( '%(asctime)s - %(name)s , %(levelname)s : %(message)s' ))
 	logger.addHandler(fh)
