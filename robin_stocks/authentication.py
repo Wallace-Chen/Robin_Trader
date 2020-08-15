@@ -128,10 +128,10 @@ def login(username=None, password=None, expiresIn=86400, scope='internal', by_sm
         if store_session:
             try:
                 with open(pickle_path, 'rb') as f:
-                    #time_token = creation_date(pickle_path)
-                    #time_passed = time.mktime(dt.datetime.now().timetuple()) - time.mktime(time_token.timetuple())
-                    #if((days*86400 - int(time_passed)) < 86400):
-                    #    raise Exception("The remaining time of pickle file is too short!")
+                    time_token = creation_date(pickle_path)
+                    time_passed = time.mktime(dt.datetime.now().timetuple()) - time.mktime(time_token.timetuple())
+                    if((days*86400 - int(time_passed)) < 86400):
+                        raise Exception("The remaining time of pickle file is too short!")
                     pickle_data = pickle.load(f)
                     access_token = pickle_data['access_token']
                     token_type = pickle_data['token_type']
