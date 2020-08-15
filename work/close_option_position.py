@@ -5,8 +5,8 @@ This is an example script that will show you how to close option positions.
 '''
 
 #!!! Fill out username and password
-username = '54chenyuan@gmail.com'
-password = '54tianCAI!'
+username = ''
+password = ''
 #!!!
 
 login = r.login(username, password)
@@ -28,8 +28,8 @@ stks = r.find_instrument_data("AAPL")
 for stk in stks:
 	if not stk['tradeable']: continue
 
-print(len(rlt))
-print(rlt[0])
+#print(len(rlt))
+#print(rlt[0])
 #rlt = r.find_options_by_expiration("AAPL", "2020-07-17", "put")
 #for i in rlt:
 #	print(i)
