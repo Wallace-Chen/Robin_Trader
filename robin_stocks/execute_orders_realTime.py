@@ -121,10 +121,11 @@ class optionChecker(threading.Thread):
 				print("!!!!!!!!!simulation: option bought at price: {}".format(self.opt.buy_price))
 			elif self.opt.direction=="sell":
 				#rlt = r.get_option_order_info(self.opt.sell_order_id)
-				rlt = r.find_options_by_expiration_and_strike(opt.symbol, opt.expr_date, opt.strike_price, opt.type)
-				if float(rlt["adjust_market_price"]) <= self.opt.sell_price:
+				rlt = r.find_options_by_expiration_and_strike(self.opt.symbol, self.opt.expr_date, self.opt.strike_price, self.opt.type)
+				market_price = float(rlt[0]["adjust_market_price"])
+				if (self.opt.sell_price < self.opt.buy_price and market_price <= self.opt.sell_price) or (self.opt.sell_price > self.opt.buy_price and market_price >= self.opt.sell_price):
 					self.opt.sell_state = "completed"
-					self.opt.close_price = float(rlt["adjust_market_price"])
+					self.opt.close_price = market_price
 				state = self.opt.sell_state
 				print("!!!!!!!!!simulation: option sold at price: {}".format(self.opt.close_price))
 			if state == "canceled" or state == "filled" or state == "completed":
@@ -138,7 +139,7 @@ class optionChecker(threading.Thread):
 			self.logger.info("signal has changed while the option order has not been filled. Thus this order will be canceled!")
 			print("signal has changed while the option order has not been filled. Thus this order will be canceled!")
 #			rlt = optionCancel(self.opt, direction)
-			print("Error: tried to canceled the order but failed, pls check it, status: {}".format(state))
+			print("Error: tried to canceled the order but failed, pls check it")
 			print("expr_date:{}, strike_price:{}, option_type:{}".format(self.opt.expr_date, self.opt.strike_price, self.opt.type))
 
 class orderExecution(threading.Thread):
@@ -188,8 +189,8 @@ class orderExecution(threading.Thread):
 						self.logger.info("Order has been canceled!")
 						continue
 					else:
-						self.logger.error("Error, the order status is {}, orderExecution class will be returned.".format(opt.buy_state))
-						print("Error, the order status is {}, orderExecution class will be returned.".format(opt.buy_state))
+						self.logger.error("Error, the order status is {}, orderExecution class will be returned.".format(self.opt.buy_state))
+						print("Error, the order status is {}, orderExecution class will be returned.".format(self.opt.buy_state))
 						return False
 				else:
 					self.logger.warning("Cannot find a available options to buy, check your accoun balance or market is not open!")
@@ -207,13 +208,14 @@ class orderExecution(threading.Thread):
 				del thread_checker
 			elif len(self.opt.signal)>0 and self.opt.signal[-1] == "": # here just to replace orders
 #				rlt = r.get_option_order_info(self.opt.sell_order_id)
-#				self.opt.status = rlt["state"]
+#				self.opt.sell_state = rlt["state"]
 #				if (abs(self.opt.sell_price - float(ret["price"])) > 0):
 #					print("Selling price changed,replacing the option order")
 				rlt = optionReplace(self.opt, self.logger, "sell")
-				rlt = r.find_options_by_expiration_and_strike(opt.symbol, opt.expr_date, opt.strike_price, opt.type)
-				if  float(rlt["adjust_market_price"]) <= self.opt.sell_price:
-					self.opt.close_price = float(rlt["adjust_market_price"])
+				rlt = r.find_options_by_expiration_and_strike(self.opt.symbol, self.opt.expr_date, self.opt.strike_price, self.opt.type)
+				market_price = float(rlt[0]["adjust_market_price"])
+				if (self.opt.sell_price < self.opt.buy_price and market_price <= self.opt.sell_price) or (self.opt.sell_price > self.opt.buy_price and market_price >= self.opt.sell_price):
+					self.opt.close_price = market_price
 					self.opt.sell_state = "completed"
 				print("!!!!!!!!!simulation: option sold at price: {}".format(self.opt.close_price))
 			if rlt:

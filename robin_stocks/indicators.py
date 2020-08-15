@@ -240,41 +240,41 @@ def check_exit(opt): # check exit signal and set proper sell price
 	print("check_exit: ", opt.sell_price)
 	logger.info("buy_price:{}, top_price:{}, check_exit: {}".format(opt.buy_price, opt.top_price, opt.sell_price))
 	
-	if len(opt.time) == 0: return False
-	if opt.type == "call":
-		if opt.price[-1] <= opt.ema2[-1]: 
-			logger.info("call option: a close signal is triggered: price hit the ema2 line, price, ema1, ema2, ema3")
-			logger.info(opt.price)
-			logger.info(opt.ema1)
-			logger.info(opt.ema2)
-			logger.info(opt.ema3)
+	if len(opt.ema2) > 0 and len(opt.ema1) > opt.period_ma1/3:
+		if opt.type == "call":
+			if opt.price[-1] <= opt.ema2[-1]: 
+				logger.info("call option: a close signal is triggered: price hit the ema2 line, price, ema1, ema2, ema3")
+				logger.info(opt.price)
+				logger.info(opt.ema1)
+				logger.info(opt.ema2)
+				logger.info(opt.ema3)
 			
-			opt.signal[-1] = "close"
-		if all([i<j for i,j in zip(opt.price[-int(opt.period_ma1/3):], opt.ema1[-int(opt.period_ma1/3):])]):
-			logger.info("call option: a close signal is triggered: price hit the ema1 line for {} minutes, price, ema1, ema2, ema3".format(int(opt.period_ma1/3)))
-			logger.info(opt.price)
-			logger.info(opt.ema1)
-			logger.info(opt.ema2)
-			logger.info(opt.ema3)
+				opt.signal[-1] = "close"
+			if all([i<j for i,j in zip(opt.price[-int(opt.period_ma1/3):], opt.ema1[-int(opt.period_ma1/3):])]):
+				logger.info("call option: a close signal is triggered: price hit the ema1 line for {} minutes, price, ema1, ema2, ema3".format(int(opt.period_ma1/3)))
+				logger.info(opt.price)
+				logger.info(opt.ema1)
+				logger.info(opt.ema2)
+				logger.info(opt.ema3)
 			
-			opt.signal[-1] = "close"
-	elif opt.type == "put":
-		if opt.price[-1] <= opt.ema2[-1]:
-			logger.info("put option: a close signal is triggered: price hit the ema2 line, price, ema1, ema2, ema3")
-			logger.info(opt.price)
-			logger.info(opt.ema1)
-			logger.info(opt.ema2)
-			logger.info(opt.ema3)
+				opt.signal[-1] = "close"
+		elif opt.type == "put":
+			if opt.price[-1] <= opt.ema2[-1]:
+				logger.info("put option: a close signal is triggered: price hit the ema2 line, price, ema1, ema2, ema3")
+				logger.info(opt.price)
+				logger.info(opt.ema1)
+				logger.info(opt.ema2)
+				logger.info(opt.ema3)
 
-			opt.signal[-1] = "close"
-		if all([i<j for i,j in zip(opt.price[-int(opt.period_ma1/3):], opt.ema1[-int(opt.period_ma1/3):])]):
-			logger.info("put option: a close signal is triggered: price hit the ema1 line for {} minutes, price, ema1, ema2, ema3".format(int(opt.period_ma1/3)))
-			logger.info(opt.price)
-			logger.info(opt.ema1)
-			logger.info(opt.ema2)
-			logger.info(opt.ema3)
+				opt.signal[-1] = "close"
+			if all([i<j for i,j in zip(opt.price[-int(opt.period_ma1/3):], opt.ema1[-int(opt.period_ma1/3):])]):
+				logger.info("put option: a close signal is triggered: price hit the ema1 line for {} minutes, price, ema1, ema2, ema3".format(int(opt.period_ma1/3)))
+				logger.info(opt.price)
+				logger.info(opt.ema1)
+				logger.info(opt.ema2)
+				logger.info(opt.ema3)
 
-			opt.signal[-1] = "close"
+				opt.signal[-1] = "close"
 	
 	close_logger(logger)		
 	

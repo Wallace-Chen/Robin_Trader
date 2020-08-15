@@ -199,8 +199,8 @@ class showPrice(object):
 class realTimeShow:
 	def __init__(self, symbol, refreshingRate, period_sma1=20, period_sma2=30, period_sma3=60, showPlot=False, expirationDate='', strikePrice='', optionType=''):
 		self.logger = r.setup_logger("realTimeShow", logfile_loadingData)
-		username = ''
-		password = ''
+		username = '54chenyuan@gmail.com'
+		password = '54tianCAI!'
 		login = r.login(username,password)
 
 		self.refresh_rate = refreshingRate
