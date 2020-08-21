@@ -21,6 +21,10 @@ setup(name='robin_stocks',
       requires=['requests'],
       install_requires=[
           'requests',
-		  'numpy'
+	  'numpy',
+          'python-dateutil',
+          'pytz',
+          'matplotlib',
+          'holidays'
       ],
       zip_safe=False)
