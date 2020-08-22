@@ -21,14 +21,11 @@ setup(name='robin_stocks',
       requires=['requests', 'pyotp'],
       install_requires=[
           'requests',
-<<<<<<< HEAD
+          'pyotp',
 	  'numpy',
           'python-dateutil',
           'pytz',
           'matplotlib',
           'holidays'
-=======
-          'pyotp',
->>>>>>> upstream/master
       ],
       zip_safe=False)

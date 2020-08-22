@@ -19,5 +19,6 @@ tests/test_app.py
 
 .cache/v/cache/
 
+*backup
 *txt
 robin_stocks/log/
