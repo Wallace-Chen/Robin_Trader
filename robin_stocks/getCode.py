@@ -6,8 +6,8 @@ import re
 import time
 from dateutil import tz
 
-user = ''
-password = ''
+user = '54chenyuan@gmail.com'
+password = '54tianCAI'
 imap_url = 'imap.gmail.com'
 
 

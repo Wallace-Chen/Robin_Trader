@@ -15,6 +15,30 @@ stocks, options, and crypto-currencies in real time.
 
 To join our Slack channel where you can discuss trading and coding, click the link https://join.slack.com/t/robin-stocks/shared_invite/zt-7up2htza-wNSil5YDa3zrAglFFSxRIA
 
+Contributing
+============
+If you would like to contribute to this project, follow our contributing guidelines `Here <https://github.com/jmfernandes/robin_stocks/blob/master/contributing.md>`_.
+
+Automatic Testing
+^^^^^^^^^^^^^^^^^
+
+If you are contributing to this project and would like to use automatic testing for your changes, you will need to install pytest and pytest-dotenv. To do this type into terminal or command prompt:
+
+>>> pip install pytest
+>>> pip install pytest-dotenv
+
+You will also need to fill out all the fields in .test.env. I recommend that you rename the file as .env once you are done adding in all your personal information. After that, you can simply run:
+
+>>> pytest
+
+to run all the tests. If you would like to run specific tests or run all the tests in a specific class then type:
+
+>>> pytest tests/test_github_actions.py -k test_name_apple # runs only the 1 test
+>>> pytest tests/test_github_actions.py -k TestStocks # runs every test in TestStocks but nothing else
+
+Finally, if you would like the API calls to print out to terminal, then add the -s flag to any of the above pytest calls.
+
+
 Installing
 ========================
 There is no need to download these files directly. This project is published on PyPi,
@@ -47,8 +71,37 @@ Example Usage
 When you write a new python script, you'll have to load the module and login to Robinhood. This is
 accomplished by typing
 
+Basic
+^^^^^
+
 >>> import robin_stocks as r
 >>> login = r.login('joshsmith@email.com','password')
+
+You will be prompted for your MFA token if you have MFA enabled and choose to do the above basic example.
+
+With MFA entered programmatically from Time-based One-Time Password (TOTP)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+NOTE: to use this feature, you will have to sign into your robinhood account and turn on two factor authentication.
+Robinhood will ask you which two factor authorization app you want to use. Select "other". Robinhood will present you with
+an alphanumeric code. This code is what you will use for "My2factorAppHere" in the code below. Run the following code and put
+the resulting MFA code into the prompt on your robinhood app.
+
+>>> import pyotp
+>>> totp  = pyotp.TOTP("My2factorAppHere").now()
+>>> print("Current OTP:", totp)
+
+Once you have entered the above MFA code (the totp variable that is printed out) into your Robinhood account, it will give you a backup code.
+Make sure you do not lose this code or you may be locked out of your account!!! You can also take the exact same "My2factorAppHere" from above
+and enter it into your phone's authentication app, such as Google Authenticator. This will cause the exact same MFA code to be generated on your phone
+as well as your python code. This is important to do if you plan on being away from your computer and need to access your Robinhood account from your phone.
+
+Now you should be able to login with the following code,
+
+>>> import pyotp
+>>> import robin_stocks as r
+>>> totp  = pyotp.TOTP("My2factorAppHere").now()
+>>> login = r.login('joshsmith@email.com','password', mfa_code=totp)
 
 Not all of the functions contained in the module need the user to be authenticated. A lot of the functions
 contained in the modules 'stocks' and 'options' do not require authentication, but it's still good practice
@@ -141,6 +194,17 @@ file extension. If it is missing it will be added, and any other file extension 
 >>> # let's say that I am running code from C:/Users/josh/documents/
 >>> r.export_completed_stock_orders(".") # saves at C:/Users/josh/documents/stock_orders_Jun-28-2020.csv
 >>> r.export_completed_option_orders("../", "toplevel") # save at C:/Users/josh/toplevel.csv
+
+Getting Quote Information For Stocks In A Specific Category
+-----------------------------------------------------------
+When you are on Robinhood, there are these green tags you can click on to get all the stocks for that category.
+You can now get the quote information for those categories by calling
+
+>>> r.get_all_stocks_from_market_tag('upcoming-earnings') # get upcoming earnings
+>>> r.get_all_stocks_from_market_tag('technology') # get all tech tags
+
+These functions do some processing to get the quote data so they may run a little slow.
+The Robinhood API only returns a list of instrument urls.
 
 Using Option Spreads
 ====================

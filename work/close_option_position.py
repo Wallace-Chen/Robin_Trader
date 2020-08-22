@@ -5,8 +5,8 @@ This is an example script that will show you how to close option positions.
 '''
 
 #!!! Fill out username and password
-username = ''
-password = ''
+username = '54chenyuan@gmail.com'
+password = '54tianCAI!'
 #!!!
 
 login = r.login(username, password)

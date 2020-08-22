@@ -393,7 +393,7 @@ class realTimeShow:
 
 if __name__ == '__main__':
     mp.set_start_method("forkserver") 
-    myShow = realTimeShow("AAPL",5,1,2,3,True,"2020-07-17",385, "call")
+    myShow = realTimeShow("AAPL",5,1,2,3,False,"2020-07-17",385, "call")
     myShow.run()
 #    myShow.runOption()
 

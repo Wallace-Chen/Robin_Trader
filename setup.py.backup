@@ -7,7 +7,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='robin_stocks',
-      version='1.2.2',
+      version='1.5.0',
       description='A Python wrapper around the Robinhood API',
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -18,13 +18,17 @@ setup(name='robin_stocks',
       license='MIT',
       python_requires='>=3',
       packages=find_packages(),
-      requires=['requests'],
+      requires=['requests', 'pyotp'],
       install_requires=[
           'requests',
+<<<<<<< HEAD
 	  'numpy',
           'python-dateutil',
           'pytz',
           'matplotlib',
           'holidays'
+=======
+          'pyotp',
+>>>>>>> upstream/master
       ],
       zip_safe=False)

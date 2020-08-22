@@ -3,14 +3,15 @@ import datetime as dt
 import holidays
 import pytz
 import numpy as np
+import os
 
 '''
 This is a script that will load all stocks and do some analysis
 '''
 
 #!!! Fill out username and password
-username = ''
-password = ''
+username = '54chenyuan@gmail.com'
+password = '54tianCAI!'
 #!!!
 
 login = r.login(username, password)
@@ -20,7 +21,7 @@ submitOptionSell = False
 
 #stks = r.find_instrument_data("")
 stks = [
-#    {'symbol': 'PLAY', 'tradeable': True, 'type': 'stock'},
+    {'symbol': 'PLAY', 'tradeable': True, 'type': 'stock'},
     {'symbol': 'CCL', 'tradeable': True, 'type': 'stock'},
     {'symbol': 'UAL', 'tradeable': True, 'type': 'stock'}
 ]
@@ -53,12 +54,12 @@ def returnRate(sym, price, date):
     num = 0
     for rlt in opts:
         num = num + 1
-        if(num>100): break
+#        if(num>100): break
         try:
             strike_p = float(rlt['strike_price'])
             bid_price = float(rlt['bid_price'])
             #print("bid_price: {}, strike_price: {}\n".format(bid_price, strike_p))
-            if bid_price>0.01 and (strike_p-price)>2*bid_price and strike_p>1.11*price:
+            if bid_price>0.01 and (strike_p-price)>2*bid_price and strike_p>=1.1*price:
                 dic = {}
                 dic["bid_price"] = bid_price
                 dic["strike_price"] = strike_p
@@ -108,7 +109,7 @@ def returnOption(sym, price, checkCand=True):
         print("next friday date: {}, strike_price: {}, amortized day price: {}\n ".format(date1, p1_strike_p, p1_bid_price/ndays1/100))
         print("the next two friday date: {}, strike_price: {}, amortized day price: {}\n ".format(date2, p2_strike_p, p2_bid_price/ndays2/100))
         print("the next month date: {}, strike_price: {}, amortized day price: {}\n".format(candle_date, c_strike_p, c_bid_price/ncand/100))
-        return None
+#        return None
     if(p1_bid_price/ndays1 <= 0.9*p2_bid_price/ndays2):
         return date2, p2_bid_price, p2_strike_p
     else:
@@ -158,8 +159,12 @@ if not returnOptionFlag:
     outs.sort(key=lambda x: x["returnRate"], reverse=True)
 
 # write to a file:
-outf = "stocks.txt"
-if returnOptionFlag: outf = "options.txt"
+folder = "outputs"
+today = dt.datetime.now(pytz.timezone("Europe/Zurich"))
+timestamp = today.strftime("%Y-%m-%d_%H:%M")
+os.system('mkdir -p {}'.format(folder))
+outf = "{}/stocks_{}.txt".format(folder, timestamp)
+if returnOptionFlag: outf = "{}/options_{}.txt".format(folder, timestamp)
 print("\nWe have {} stocks, writing data to the file: {}, a moment please...\n".format(len(outs), outf))
 
 with open(outf, "w") as f:

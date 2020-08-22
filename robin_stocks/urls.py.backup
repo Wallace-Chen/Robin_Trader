@@ -37,6 +37,9 @@ def security_profile():
 def user_profile():
     return('https://api.robinhood.com/user/')
 
+def portfolis_historicals(account_number):
+    return('https://api.robinhood.com/portfolios/historicals/{0}/'.format(account_number))
+
 # Stocks
 
 
@@ -67,7 +70,6 @@ def news(symbol):
 def popularity(symbol):
     return('https://api.robinhood.com/instruments/{0}/popularity/'.format(id_for_stock(symbol)))
 
-
 def quotes():
     return('https://api.robinhood.com/quotes/')
 
@@ -81,14 +83,17 @@ def splits(symbol):
 
 # account
 
+def phoenix():
+    return('https://phoenix.robinhood.com/accounts/unified')
 
 def positions():
     return('https://api.robinhood.com/positions/')
 
-
 def banktransfers():
     return('https://api.robinhood.com/ach/transfers/')
 
+def cardtransactions():
+   return('https://minerva.robinhood.com/history/transactions/')
 
 def daytrades(account):
     return('https://api.robinhood.com/accounts/{0}/recent_day_trades/'.format(account))
@@ -160,13 +165,23 @@ def watchlist_delete(name, instrument):
 def currency():
     return('https://nummus.robinhood.com/currency_pairs/')
 
-
 def markets():
     return('https://api.robinhood.com/markets/')
 
+def market_hours(market, date):
+    return('https://api.robinhood.com/markets/{}/hours/{}/'.format(market, date))
 
-def movers():
+def movers_sp500():
     return('https://api.robinhood.com/midlands/movers/sp500/')
+
+def get_100_most_popular():
+    return('https://api.robinhood.com/midlands/tags/tag/100-most-popular/')
+
+def movers_top():
+    return('https://api.robinhood.com/midlands/tags/tag/top-movers/')
+
+def market_category(category):
+    return('https://api.robinhood.com/midlands/tags/tag/{}/'.format(category))
 
 # options
 
