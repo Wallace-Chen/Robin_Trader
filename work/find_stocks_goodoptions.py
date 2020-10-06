@@ -10,21 +10,21 @@ This is a script that will load all stocks and do some analysis
 '''
 
 #!!! Fill out username and password
-username = '54chenyuan@gmail.com'
-password = '54tianCAI!'
+username = ''
+password = ''
 #!!!
 
 login = r.login(username, password)
 
-returnOptionFlag = True
+returnOptionFlag = False
 submitOptionSell = False
 
-#stks = r.find_instrument_data("")
-stks = [
-    {'symbol': 'PLAY', 'tradeable': True, 'type': 'stock'},
-    {'symbol': 'CCL', 'tradeable': True, 'type': 'stock'},
-    {'symbol': 'UAL', 'tradeable': True, 'type': 'stock'}
-]
+stks = r.find_instrument_data("")
+#stks = [
+#    {'symbol': 'PLAY', 'tradeable': True, 'type': 'stock'},
+#    {'symbol': 'CCL', 'tradeable': True, 'type': 'stock'},
+#    {'symbol': 'UAL', 'tradeable': True, 'type': 'stock'}
+#]
 
 def sellCallOption(dic):
     sym = dic['symbol']
@@ -36,15 +36,17 @@ def sellCallOption(dic):
         return False
     bid_p = float(rlt[0]["bid_price"])
     ask_p = float(rlt[0]["ask_price"])
-    adjusted_p = round(bid_p+ask_p/2, 2)
+    adjusted_p = round((bid_p+ask_p)/2, 2)
+    if(sym=="PLAY" and adjusted_p%0.05 > 0): adjusted_p = round((int(adjusted_p/0.05) + 1) * 0.05,2)
+    print("\nask_p: {}, bid_p:{}".format(ask_p, bid_p))
     print("\nSubmiting a sell Call option: symbol {}, strike_p {}, exp_date {}, adjusted_price: {}\n".format(sym, strike_p ,exp_date, adjusted_p))
     try:
         ret = r.order_sell_option_limit("open", "credit", adjusted_p , sym, 1, exp_date, strike_p, "call")
         if ret:
             print(" Submitted, the order status is: {}".format(ret["state"]))
             return True
-    except:
-        print(" Failed!")
+    except Exception as e:
+        print(" Failed: {}".format(e))
         return False
 
 def returnRate(sym, price, date):
@@ -98,9 +100,9 @@ def returnOption(sym, price, checkCand=True):
         (c_rate, c_bid_price, c_strike_p) = returnRate(sym, price, candle_date.strftime("%Y-%m-%d"))
         (p1_rate, p1_bid_price, p1_strike_p) = returnRate(sym, price, date1.strftime("%Y-%m-%d"))
         (p2_rate, p2_bid_price, p2_strike_p) = returnRate(sym, price, date2.strftime("%Y-%m-%d"))
-        print("bid_price {}, date {}".format(c_bid_price, candle_date))
-        print("bid_price {}, date {}".format(p1_bid_price, date1))
-        print("bid_price {}, date {}".format(p2_bid_price, date2))
+        print("bid_price {}, amortized: {}, date {}".format(c_bid_price, c_bid_price/ncand, candle_date))
+        print("bid_price {}, amortized: {}, date {}".format(p1_bid_price, p1_bid_price/ndays1, date1))
+        print("bid_price {}, amortized: {}, date {}".format(p2_bid_price, p2_bid_price/ndays2, date2))
     except Exception as e:
         print(e)
         return None
@@ -110,7 +112,7 @@ def returnOption(sym, price, checkCand=True):
         print("the next two friday date: {}, strike_price: {}, amortized day price: {}\n ".format(date2, p2_strike_p, p2_bid_price/ndays2/100))
         print("the next month date: {}, strike_price: {}, amortized day price: {}\n".format(candle_date, c_strike_p, c_bid_price/ncand/100))
 #        return None
-    if(p1_bid_price/ndays1 <= 0.9*p2_bid_price/ndays2):
+    if(p1_bid_price/ndays1 <= 0.8*p2_bid_price/ndays2):
         return date2, p2_bid_price, p2_strike_p
     else:
         return date1, p1_bid_price, p1_strike_p
@@ -133,7 +135,7 @@ for stk in stks:
         print("\n------------Getting option info for: {}-------------\n".format(sym))
         
         if returnOptionFlag:
-            date, bid_price, strike_p = returnOption(sym, price, False)
+            date, bid_price, strike_p = returnOption(sym, price, True)
             dic = {}
             dic['symbol'] = sym
             dic['profit'] = bid_price
@@ -143,7 +145,7 @@ for stk in stks:
             outs.append(dic)
             if submitOptionSell: sellCallOption(dic)
         else:
-            rate, profit, strike_p = returnRate(sym, price, "2020-08-28")
+            rate, profit, strike_p = returnRate(sym, price, "2020-09-25")
             if rate is not None:
                 dic = {}
                 dic['symbol'] = sym

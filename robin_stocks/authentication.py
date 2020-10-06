@@ -71,7 +71,7 @@ def respond_to_challenge(challenge_id, sms_code):
     return(helper.request_post(url, payload))
 
 
-def login(username=None, password=None, expiresIn=86400, scope='internal', by_sms=True, store_session=True, mfa_code=None):
+def login(username=None, password=None, expiresIn=86400, scope='internal', by_sms=False, store_session=True, mfa_code=None):
     """This function will effectively log the user into robinhood by getting an
     authentication token and saving it to the session header. By default, it
     will store the authentication token in a pickle file and load that value
@@ -136,7 +136,7 @@ def login(username=None, password=None, expiresIn=86400, scope='internal', by_sm
                 with open(pickle_path, 'rb') as f:
                     time_token = creation_date(pickle_path)
                     time_passed = time.mktime(dt.datetime.now().timetuple()) - time.mktime(time_token.timetuple())
-                    if((days*86400 - int(time_passed)) < 86400):
+                    if((days*86400 - int(time_passed)) < 2*86400):
                         raise Exception("The remaining time of pickle file is too short!")
                     pickle_data = pickle.load(f)
                     access_token = pickle_data['access_token']

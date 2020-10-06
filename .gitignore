@@ -22,3 +22,6 @@ tests/test_app.py
 *backup
 *txt
 robin_stocks/log/
+*log
+*csv
+*html
